@@ -2,29 +2,41 @@ import React from "react";
 import ReactDOM from "react-dom";
 const rootElement = document.getElementById("root");
 
-let _state;
+let _state = [];
+let index = 0;
 
 function myUseState(initialValue) {
-  _state = _state === undefined ? initialValue : _state;
-  function setState(newState) {
-    _state = newState;
-    render();
-  }
-  return [_state, setState];
+    const currentIndex = index;
+    index += 1;
+    _state[currentIndex] = _state[currentIndex] || initialValue;
+    const setState = newState => {
+        _state[currentIndex] = newState;
+        render();
+    };
+    return [_state[currentIndex], setState];
 }
 
-const render = () => ReactDOM.render(<App />, rootElement);
+const render = () => {
+    index = 0;
+    ReactDOM.render(<App />, rootElement);
+};
 
 function App() {
-  const [n, setN] = myUseState(0);
-  return (
-    <div className="App">
-      <p>{n}</p>
-      <p>
-        <button onClick={() => setN(n + 1)}>+1</button>
-      </p>
-    </div>
-  );
+    const [n, setN] = myUseState(0);
+    const [m, setM] = myUseState(0);
+    console.log(_state);
+    return (
+        <div className="App">
+            <p>{n}</p>
+            <p>
+                <button onClick={() => setN(n + 1)}>+1</button>
+            </p>
+            <p>{m}</p>
+            <p>
+                <button onClick={() => setM(m + 1)}>+1</button>
+            </p>
+        </div>
+    );
 }
 
 ReactDOM.render(<App />, rootElement);
