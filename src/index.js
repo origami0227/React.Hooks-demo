@@ -1,42 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import ReactDOM from "react-dom";
-const rootElement = document.getElementById("root");
-
-let _state = [];
-let index = 0;
-
-function myUseState(initialValue) {
-    const currentIndex = index;
-    index += 1;
-    _state[currentIndex] = _state[currentIndex] || initialValue;
-    const setState = newState => {
-        _state[currentIndex] = newState;
-        render();
-    };
-    return [_state[currentIndex], setState];
-}
-
-const render = () => {
-    index = 0;
-    ReactDOM.render(<App />, rootElement);
-};
 
 function App() {
-    const [n, setN] = myUseState(0);
-    const [m, setM] = myUseState(0);
-    console.log(_state);
+    const [user,setUser] = useState({name:'Origami', age: 18})
+    const onClick = ()=>{
+        setUser({
+            ...user,//需要将原来的对象拷贝一遍在进行覆盖
+            name: 'Jack'
+        })
+    }
     return (
         <div className="App">
-            <p>{n}</p>
-            <p>
-                <button onClick={() => setN(n + 1)}>+1</button>
-            </p>
-            <p>{m}</p>
-            <p>
-                <button onClick={() => setM(m + 1)}>+1</button>
-            </p>
+            <h1>{user.name}</h1>
+            <h2>{user.age}</h2>
+            <button onClick={onClick}>Click</button>
         </div>
     );
 }
 
+const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
