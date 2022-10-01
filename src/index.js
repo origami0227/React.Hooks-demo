@@ -1,20 +1,42 @@
-import React, { useState, useEffect,useLayoutEffect } from "react";
+import React, { useMemo } from "react";
 import ReactDOM from "react-dom";
+
 import "./styles.css";
 
-const BlinkyRender = () => {
-    const [value, setValue] = useState(0);
-
-    useLayoutEffect(() => {
-        document.querySelector('#x').innerText = `value: 1000`
-    }, [value]);
-
+function App() {
+    const [n, setN] = React.useState(0);
+    const [m, setM] = React.useState(0);
+    const onClick = () => {
+        setN(n + 1);
+    };
+    const onClick2 = () => {
+        setM(m + 1);
+    };
+    const onClickChild = useMemo(() => {
+        const fn = div => {
+            console.log("on click child, m: " + m);
+            console.log(div);
+        };
+        return fn;
+    }, [m]); // 这里呃 [m] 改成 [n] 就会打印出旧的 m
     return (
-        <div id="x" onClick={() => setValue(0)}>value: {value}</div>
+        <div className="App">
+            <div>
+                <button onClick={onClick}>update n {n}</button>
+                <button onClick={onClick2}>update m {m}</button>
+            </div>
+            <Child2 data={m} onClick={onClickChild} />
+        </div>
     );
-};
+}
 
-ReactDOM.render(
-    <BlinkyRender />,
-    document.querySelector("#root")
-);
+function Child(props) {
+    console.log("child 执行了");
+    console.log("假设这里有大量代码");
+    return <div onClick={e => props.onClick(e.target)}>child: {props.data}</div>;
+}
+
+const Child2 = React.memo(Child);
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
