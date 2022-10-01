@@ -1,43 +1,20 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { useState, useEffect,useLayoutEffect } from "react";
 import ReactDOM from "react-dom";
-
 import "./styles.css";
 
-const C = createContext(null);
+const BlinkyRender = () => {
+    const [value, setValue] = useState(0);
 
-function App() {
-    console.log("App 执行了");
-    const [n, setN] = useState(0);
+    useLayoutEffect(() => {
+        document.querySelector('#x').innerText = `value: 1000`
+    }, [value]);
+
     return (
-        <C.Provider value={{ n, setN }}>
-            <div className="App">
-                <Baba />
-            </div>
-        </C.Provider>
+        <div id="x" onClick={() => setValue(0)}>value: {value}</div>
     );
-}
+};
 
-function Baba() {
-    const { n, setN } = useContext(C);
-    return (
-        <div>
-            我是爸爸 n: {n} <Child />
-        </div>
-    );
-}
-
-function Child() {
-    const { n, setN } = useContext(C);
-    const onClick = () => {
-        setN(i => i + 1);
-    };
-    return (
-        <div>
-            我是儿子 我得到的 n: {n}
-            <button onClick={onClick}>+1</button>
-        </div>
-    );
-}
-
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(
+    <BlinkyRender />,
+    document.querySelector("#root")
+);
