@@ -1,20 +1,24 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-
-import "./styles.css";
+import useList from "./hooks/useList";
 
 function App() {
-    const buttonRef = useRef(null);
+    const { list, setList } = useList();
     return (
         <div className="App">
-            <Button3 ref={buttonRef}>按钮</Button3>
+            <h1>List</h1>
+            {list ? (
+                <ol>
+                    {list.map(item => (
+                        <li key={item.id}>{item.name}</li>
+                    ))}
+                </ol>
+            ) : (
+                "加载中..."
+            )}
         </div>
     );
 }
-
-const Button3 = React.forwardRef((props, ref) => {
-    return <button className="red" ref={ref} {...props} />;
-});
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
